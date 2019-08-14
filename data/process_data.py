@@ -18,10 +18,12 @@ def clean_data(df):
 	
 	for column in categories:
         # set each value to be the last character of the string
-        categories[column] = categories[column].str[-1]
-    
+        categories[column] = categories[column].str[-1]   
         # convert column from string to numeric
         categories[column] = categories[column].astype(int)
+        #restrict to just 0 or 1
+        categories[column] = (categories[column] != 0).astype(int)		
+		
 	#appending new category columns back onto origional dataframe
 	df.drop(['categories'],inplace=True,axis=1)
 	df = pd.concat([df,categories],axis=1)
@@ -42,7 +44,7 @@ def clean_data(df):
 def save_data(df, database_filename):
     #example database_filename 'sqlite:///disaster_project.db'
     engine = create_engine(database_filename)
-    df.to_sql('clean_data', engine, index=False)  
+    df.to_sql('clean_data', engine, index=False, if_exists='replace')  
 
 
 def main():
