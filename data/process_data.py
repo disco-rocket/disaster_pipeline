@@ -4,8 +4,8 @@ from sqlalchemy import create_engine
 
 def load_data(messages_filepath, categories_filepath):
     messages = pd.read_csv(messages_filepath)
-	categories = pd.read_csv(categories_filepath)
-	return messages.merge(categories, how='left',left_on='id',right_on='id')
+    categories = pd.read_csv(categories_filepath)
+    return messages.merge(categories, how='left',left_on='id',right_on='id')
 
 def drop_zero_cols(df):
     counts = df.sum()
@@ -19,40 +19,40 @@ def drop_zero_cols(df):
 def clean_data(df):
     #splitting out the category values into different columns
     categories = df['categories'].str.split(';', expand=True)
-	#getting category headers
-	row = categories.iloc[0,:]
+    #getting category headers
+    row = categories.iloc[0,:]
     category_colnames = row.str.split('-', expand=True)[0].tolist()
-	categories.columns = category_colnames
-	
-	for column in categories:
+    categories.columns = category_colnames
+    
+    for column in categories:
         # set each value to be the last character of the string
         categories[column] = categories[column].str[-1]   
         # convert column from string to numeric
         categories[column] = categories[column].astype(int)
         #restrict to just 0 or 1
         categories[column] = (categories[column] != 0).astype(int)		
-		
-	#appending new category columns back onto origional dataframe
-	df.drop(['categories'],inplace=True,axis=1)
-	df = pd.concat([df,categories],axis=1)
-	
-	# check number of duplicates
+
+    #appending new category columns back onto origional dataframe
+    df.drop(['categories'],inplace=True,axis=1)
+    df = pd.concat([df,categories],axis=1)
+
+    # check number of duplicates
     counts = pd.DataFrame(df['message'].value_counts()).reset_index(level=0, inplace=False)
     duplicates = counts[counts['message'] > 1].shape[0]
     print('starting with {0} duplicate messages'.format(duplicates))
-	# drop duplicates
+    # drop duplicates
     df.drop_duplicates(subset ="message", keep = 'first', inplace = True) 
-	# check number of duplicates
+    # check number of duplicates
     counts = pd.DataFrame(df['message'].value_counts()).reset_index(level=0, inplace=False)
     duplicates = counts[counts['message'] > 1].shape[0]
     print('reduced to {0} duplicate messages'.format(duplicates))
-	drop_zero_cols(df)
+    drop_zero_cols(df)
     return df
 
 
 def save_data(df, database_filename):
-    #example database_filename 'sqlite:///disaster_project.db'
-    engine = create_engine(database_filename)
+    #example database_filename 'disaster_project.db'
+    engine = create_engine('sqlite:///' + database_filename)
     df.to_sql('clean_data', engine, index=False, if_exists='replace')  
 
 
