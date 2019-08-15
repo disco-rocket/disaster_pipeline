@@ -14,3 +14,13 @@ This was for a Udacity Data Science Nano-Degree program
     `python run.py`
 
 3. Go to http://0.0.0.0:3001/
+
+### Method
+Logistic regression, Support Vector Machine Classification and Randomforest were tried
+The untuned SVM took 20 minutes to train and focused on accuracy by setting the prediction for most columns to 0.
+Due to the amount of time it took to run, this was dropped.
+Logistic regression took less than a minute to train, and gave reasonable precision, recall and accuracy for some columns.
+However there were 7 message types with zero presicion or recall
+Randomforest took around a minute to train, but had 8 message types with zero recall and precision, as well as poorer results for the majority of message types
+
+
