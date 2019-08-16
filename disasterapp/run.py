@@ -7,10 +7,9 @@ from nltk.tokenize import word_tokenize
 
 from flask import Flask
 from flask import render_template, request, jsonify
-from plotly.graph_objs import Bar
+from plotly.graph_objs import Bar, Pie
 from sklearn.externals import joblib
 from sqlalchemy import create_engine
-
 
 app = Flask(__name__)
 
@@ -42,15 +41,15 @@ def index():
     # TODO: Below is an example - modify to extract data for your own visuals
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
-    
+    message_counts = df.iloc[:,4:].sum(axis=0)
+    message_counts.sort_values(inplace=True,ascending=False)
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
-    graphs = [
-        {
+    graph1 = {
             'data': [
-                Bar(
-                    x=genre_names,
-                    y=genre_counts
+                Pie(
+                    labels=genre_names,
+                    values=genre_counts
                 )
             ],
 
@@ -64,8 +63,28 @@ def index():
                 }
             }
         }
-    ]
     
+    graph2 ={
+            'data': [
+                Pie(
+                    labels=message_counts.index.tolist(),
+                    values=message_counts.values.tolist()
+                )
+            ],
+
+            'layout': {
+                'title': 'Types of messages received',
+                'yaxis': {
+                    'title': "Count"
+                },
+                'xaxis': {
+                    'title': "Message Type"
+                }
+            }
+        }
+    graphs = []
+    graphs.append(graph1)
+    graphs.append(graph2)
     # encode plotly graphs in JSON
     ids = ["graph-{}".format(i) for i, _ in enumerate(graphs)]
     graphJSON = json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)

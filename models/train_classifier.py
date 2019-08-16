@@ -15,10 +15,22 @@ from sklearn.metrics import f1_score, recall_score, precision_score, accuracy_sc
 import pickle
 nltk.download(['punkt', 'wordnet'])
 
+def drop_zero_cols(df):
+    #Drops columns that don't have any '1' values
+    counts = df.sum()
+    columns_to_drop = counts[counts == 0].index.tolist()
+    if len(columns_to_drop) == 0:
+        pass
+    else:
+        df.drop(columns_to_drop, inplace=True, axis=1)
+        print("Columns {0} dropped for having no positives".format(columns_to_drop))
+
 def load_data(database_filepath):
     #Example 'sqlite:///disaster_project.db'
     engine = create_engine('sqlite:///' + database_filepath)
     df = pd.read_sql('select * from clean_data', engine)
+    #Dropping response columns with no records
+    drop_zero_cols(df)
     X = df['message']
     y = df.iloc[:,4:]
     category_names = df.columns[4:]

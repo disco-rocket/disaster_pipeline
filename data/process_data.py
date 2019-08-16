@@ -7,15 +7,6 @@ def load_data(messages_filepath, categories_filepath):
     categories = pd.read_csv(categories_filepath)
     return messages.merge(categories, how='left',left_on='id',right_on='id')
 
-def drop_zero_cols(df):
-    counts = df.sum()
-    columns_to_drop = counts[counts == 0].index.tolist()
-    if len(columns_to_drop) == 0:
-        pass
-    else:
-        df.drop(columns_to_drop, inplace=True, axis=1)
-        print("Columns {0} dropped for having no positives".format(columns_to_drop))
-
 def clean_data(df):
     #splitting out the category values into different columns
     categories = df['categories'].str.split(';', expand=True)
@@ -46,7 +37,7 @@ def clean_data(df):
     counts = pd.DataFrame(df['message'].value_counts()).reset_index(level=0, inplace=False)
     duplicates = counts[counts['message'] > 1].shape[0]
     print('reduced to {0} duplicate messages'.format(duplicates))
-    drop_zero_cols(df)
+    
     return df
 
 
