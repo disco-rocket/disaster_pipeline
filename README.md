@@ -8,22 +8,22 @@ This is then presented in a Flask Webapp with two pages - one displays the messa
 
 ### File structure
 
-├── data                    
-│   ├── disaster_categories.csv  # CSV containing the categories for disaster messages
-│   ├── disaster_messages.csv    # CSV containing the actual disaster messages
-│   ├── disaster_project.db      # Database containing the SQLite database clean_data, which is merged CSV files cleaned
-│   └── process_data.py          # Python code to merge, clean and output the csv files into the database
-├── disasterapp
-│   ├── templates    
-│   │   ├──go.html               # HTML for the output of the categorisation of the users input message
-│   │   └──master.html           # HTML for main splash page for Webapp
-│   ├── __init__.py              # Required, standard init file for Flask
-│   └── run.py                   # Code to launch the webapp. Plotly graphs are also set up in this code.
-├── models
-│   ├── message_model.pickle     # Pickly of the resulting model from train_classifier.py
-│   └── train_classifier,py      # Code to transform and train the data in the database
-├── disasterapp.py               # Required code for Flask
-└── README.md                    # README
+    ├── data                    
+    │   ├── disaster_categories.csv  # CSV containing the categories for disaster messages
+    │   ├── disaster_messages.csv    # CSV containing the actual disaster messages
+    │   ├── disaster_project.db      # Database containing the SQLite database clean_data, which is merged CSV files cleaned
+    │   └── process_data.py          # Python code to merge, clean and output the csv files into the database
+    ├── disasterapp
+    │   ├── templates    
+    │   │   ├──go.html               # HTML for the output of the categorisation of the users input message
+    │   │   └──master.html           # HTML for main splash page for Webapp
+    │   ├── __init__.py              # Required, standard init file for Flask
+    │   └── run.py                   # Code to launch the webapp. Plotly graphs are also set up in this code.
+    ├── models
+    │   ├── message_model.pickle     # Pickly of the resulting model from train_classifier.py
+    │   └── train_classifier,py      # Code to transform and train the data in the database
+    ├── disasterapp.py               # Required code for Flask
+    └── README.md                    # README
 
 
 ### Instructions:
