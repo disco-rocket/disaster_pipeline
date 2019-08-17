@@ -16,6 +16,12 @@ import pickle
 nltk.download(['punkt', 'wordnet'])
 
 def drop_zero_cols(df):
+    """
+    Input: Dataframe
+    Purpose: Drops numeric columns from the input dataframe that sum to zero.
+    This is to ensure training doesn't break, and without targets the model would never predict them anyway.
+    Output: None
+    """
     #Drops columns that don't have any '1' values
     counts = df.sum()
     columns_to_drop = counts[counts == 0].index.tolist()
@@ -26,6 +32,12 @@ def drop_zero_cols(df):
         print("Columns {0} dropped for having no positives".format(columns_to_drop))
 
 def load_data(database_filepath):
+    """
+    Input: name of database(database must be stored in this directory.
+    Output: X - the message
+            y - the dependent variables (one column per category)
+            List of column headers for y
+    """
     #Example 'sqlite:///disaster_project.db'
     engine = create_engine('sqlite:///' + database_filepath)
     df = pd.read_sql('select * from clean_data', engine)
@@ -38,6 +50,10 @@ def load_data(database_filepath):
 
 
 def tokenize(text):
+    """
+    Input: Text to tokenize
+    Output: List of individual lemitised words.
+    """
     tokens = word_tokenize(text)
     lemmatizer = WordNetLemmatizer()
     
@@ -50,6 +66,10 @@ def tokenize(text):
 
 
 def build_model():
+    """
+    Input: None
+    Output: GridSearch object containing a pipeline that vectorizers, performs TFIDF, and Logistic regression
+    """
     pipeline = Pipeline([
         ('vect', CountVectorizer(tokenizer=tokenize))
         ,('tfidf', TfidfTransformer())
@@ -64,6 +84,13 @@ def build_model():
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
+    """
+    Input: 1) Trained model
+           2) The X_test population
+           3) The Y_Test population
+           4) The category names for the T_test columns
+    Output: doesn't return anything, but prints the precision, recall, F1 score and accuracy for each category
+    """
     f1_list = []
     precision_list = []
     recall_list = []
@@ -88,11 +115,17 @@ def evaluate_model(model, X_test, Y_test, category_names):
     print(column_report)
 
 def save_model(model, model_filepath):
-    #e.g. "message_model.pickle"
+    """
+    Input: 1) trained model to save
+           2) the filepath to save the pickle file (e.g. message_model.pickle)
+    """
     pickle.dump(model, open(model_filepath, 'wb'))
 
 
 def main():
+    """
+    Main function to call the other functions in the correct order
+    """
     if len(sys.argv) == 3:
         database_filepath, model_filepath = sys.argv[1:]
         print('Loading data...\n    DATABASE: {}'.format(database_filepath))
