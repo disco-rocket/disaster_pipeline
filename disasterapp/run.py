@@ -1,10 +1,6 @@
 import json
 import plotly
 import pandas as pd
-
-from nltk.stem import WordNetLemmatizer
-from nltk.tokenize import word_tokenize
-
 from flask import Flask
 from flask import render_template, request, jsonify
 from plotly.graph_objs import Bar, Pie
@@ -12,17 +8,6 @@ from sklearn.externals import joblib
 from sqlalchemy import create_engine
 
 app = Flask(__name__)
-
-def tokenize(text):
-    tokens = word_tokenize(text)
-    lemmatizer = WordNetLemmatizer()
-
-    clean_tokens = []
-    for tok in tokens:
-        clean_tok = lemmatizer.lemmatize(tok).lower().strip()
-        clean_tokens.append(clean_tok)
-
-    return clean_tokens
 
 # load data
 engine = create_engine('sqlite:///../data/disaster_project.db')
@@ -32,19 +17,19 @@ df = pd.read_sql_table('clean_data', engine)
 model = joblib.load("../models/message_model.pickle")
 
 
-# index webpage displays cool visuals and receives user input text for model
+# index webpage displays visuals and receives user input text for model
 @app.route('/')
 @app.route('/index')
 def index():
-    
+    """
+    Renders master.html with plotly graphs
+    """
     # extract data needed for visuals
-    # TODO: Below is an example - modify to extract data for your own visuals
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
     message_counts = df.iloc[:,4:].sum(axis=0)
     message_counts.sort_values(inplace=True,ascending=False)
     # create visuals
-    # TODO: Below is an example - modify to create your own visuals
     graph1 = {
             'data': [
                 Pie(
@@ -96,6 +81,9 @@ def index():
 # web page that handles user query and displays model results
 @app.route('/go')
 def go():
+    """
+    Renders go.html with the model results of the user's query
+    """
     # save user input in query
     query = request.args.get('query', '') 
 
