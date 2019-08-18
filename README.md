@@ -23,7 +23,8 @@ This is then presented in a Flask Webapp with two pages - one displays the messa
     │   ├── message_model.pickle     # Pickly of the resulting model from train_classifier.py
     │   └── train_classifier,py      # Code to transform and train the data in the database
     ├── disasterapp.py               # Required code for Flask
-    └── README.md                    # README
+    ├── README.md                    # README
+    └── screenshots                  # Folder containing screenshots
 
 
 ### Instructions:
@@ -45,4 +46,10 @@ The untuned SVM took 20 minutes to train and focused on accuracy by setting the 
 Due to the amount of time it took to run, this was dropped.
 Logistic regression took less than a minute to train, and gave reasonable precision, recall and accuracy for some columns.
 However there were 7 message types with zero presicion or recall
-Randomforest took around a minute to train, but had 8 message types with zero recall and precision, as well as poorer results for the majority of message types
+Randomforest took around a minute to train, but had 8 message types with zero recall and precision, as well as poorer results for the majority of message types.
+
+### Screenshots
+<img src="/screenshots/mainpage.png"
+     alt="Mainpage Screenshot" />
+<img src="/screenshots/classification_page.png"
+     alt="Mainpage Screenshot" />
